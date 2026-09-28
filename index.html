@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,10 +8,10 @@
 <style>
   :root {
     --bg: #f7f7f5; --card: #ffffff; --text: #1d2521; --muted: #66716b;
-    --line: #dfe3df; --accent: #1f6f5c;
+    --line: #dfe3df; --accent: #351c75;
   }
   @media (prefers-color-scheme: dark) {
-    :root { --bg: #141917; --card: #1c2320; --text: #e8ede9; --muted: #93a099; --line: #2c3632; --accent: #5fc4a8; }
+    :root { --bg: #141917; --card: #1c2320; --text: #e8ede9; --muted: #93a099; --line: #2c3632; --accent: #ad50ffff; }
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 Georgia, "Times New Roman", serif; }
@@ -53,6 +54,21 @@
 <div id="lightbox" role="dialog" aria-label="Enlarged image"><img alt=""></div>
 
 <script>
+/* ============================================================
+   EDIT THIS LIST. One entry per file. Delete the examples.
+
+   type: "image" | "video" | "pdf" | "youtube" | "link"
+   src:  path to the file, or a full URL (e.g. a GitHub Release link).
+         For "youtube", use just the video ID (the part after v=).
+   title / desc: shown under the item. desc is optional.
+
+   Where files go:
+     images/  -> your .png files
+     videos/  -> .mp4 files under 100 MB
+     docs/    -> your .pdf files
+   Big videos: upload to a GitHub Release or YouTube, then use
+   type "video" with the full release URL, or type "youtube".
+   ============================================================ */
 const items = [
   { type: "image",   src: "images/RabiDetuning_ParameterSpace.png", title: "ARP Force Map of Rabi Frequency and Detuning Laser Parameters", desc: "Errata: Detuning Ranges from 0 to 25 across plot; Gradient is in terms of Averaged Force (N*E19)" },
   { type: "image",   src: "images/U(1200Pulses).png", title: "U component of Bloch Vector Over Experiment", desc: "" },
@@ -69,8 +85,8 @@ const items = [
   { type: "pdf",     src: "docs/SE_TOLE-3.pdf", title: "Spontaneous Emission Distribution at Low Precision Solver Tolerances", desc: "" },
   { type: "pdf",     src: "docs/SE_TOLE-12.pdf", title: "Spontaneous Emission Distribution at Low High Solver Tolerances", desc: "" },
   { type: "pdf",     src: "docs/ForceMap_FrequencyDomain.pdf", title: "ARP Force (Frequency Domain) Over Varying Initial Transverse Velocities", desc: "Errata: Forgot to Update Plot with new Axes; 'Frequency' is the estimated oscilation frequency over v_0; Power is the normalized magnitude of Force (N*E19) or F, SE or Spontaneous Emission Events, and Displacment (m*E-5) or x" },
-  { type: "pdf",     src: "docs/FAVEfromVandPhi.pdf", title: "Average ARP Force over Phase and Initial Transverse Velocity", desc: "Tested With Parameters: d=1.1, w=pi/2" },
-  { type: "pdf",     src: "docs/SPONTfromVandPhi.pdf", title: "Spontaneous Emission Events over Phase and Initial Transverse Velocity", desc: "Tested With Parameters: d=1.1, w=pi/2" }
+  { type: "pdf",     src: "docs/FAVEfromVandPhi.pdf", title: "Average ARP Force over Phase and Initial Transverse Velocity", desc: "" },
+  { type: "pdf",     src: "docs/SPONTfromVandPhi.pdf", title: "Spontaneous Emission Events over Phase and Initial Transverse Velocity", desc: "" }
 ];
 
 const labels = { all: "All", image: "Images", video: "Videos", pdf: "PDFs" };
