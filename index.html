@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Files</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --card: #ffffff; --text: #1d2521; --muted: #66716b;
+    --line: #dfe3df; --accent: #1f6f5c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #141917; --card: #1c2320; --text: #e8ede9; --muted: #93a099; --line: #2c3632; --accent: #5fc4a8; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 Georgia, "Times New Roman", serif; }
+  header, main { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+  header { padding-top: 48px; padding-bottom: 8px; }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 4px; letter-spacing: -0.02em; }
+  header p { margin: 0; color: var(--muted); }
+  nav { display: flex; gap: 8px; flex-wrap: wrap; margin: 24px 0; }
+  nav button { font: inherit; font-size: 0.9rem; padding: 6px 14px; border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px; cursor: pointer; }
+  nav button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  nav button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  #grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding-bottom: 60px; }
+  .item { background: var(--card); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+  .media { background: #0000000d; aspect-ratio: 16 / 10; display: flex; align-items: center; justify-content: center; }
+  .media img, .media video, .media iframe { width: 100%; height: 100%; border: 0; object-fit: cover; display: block; }
+  .media img { cursor: zoom-in; }
+  .file-badge { font: 600 1.4rem/1 system-ui, sans-serif; color: var(--muted); }
+  .info { padding: 12px 14px 14px; }
+  .info h2 { font-size: 1rem; margin: 0 0 2px; }
+  .info p { margin: 0 0 8px; color: var(--muted); font-size: 0.9rem; }
+  .info a { color: var(--accent); font: 0.9rem system-ui, sans-serif; }
+  .empty { color: var(--muted); padding: 40px 0; }
+  #lightbox { position: fixed; inset: 0; background: #000d; display: none; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: 100%; max-height: 100%; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>My Files</h1>
+  <p>Images, videos and documents. Click an image to enlarge it.</p>
+</header>
+
+<main>
+  <nav id="filters" aria-label="Filter by type"></nav>
+  <div id="grid"></div>
+</main>
+
+<div id="lightbox" role="dialog" aria-label="Enlarged image"><img alt=""></div>
+
+<script>
+/* ============================================================
+   EDIT THIS LIST. One entry per file. Delete the examples.
+
+   type: "image" | "video" | "pdf" | "youtube" | "link"
+   src:  path to the file, or a full URL (e.g. a GitHub Release link).
+         For "youtube", use just the video ID (the part after v=).
+   title / desc: shown under the item. desc is optional.
+
+   Where files go:
+     images/  -> your .png files
+     videos/  -> .mp4 files under 100 MB
+     docs/    -> your .pdf files
+   Big videos: upload to a GitHub Release or YouTube, then use
+   type "video" with the full release URL, or type "youtube".
+   ============================================================ */
+const items = [
+  { type: "image",   src: "images/RabiDetuning_ParameterSpace.png", title: "ARP Force Map of Rabi Frequency and Detuning Laser Parameters", desc: "" },
+  { type: "image",   src: "images/U(1200Pulses).png", title: "U component of Bloch Vector Over Experiment", desc: "" },
+  { type: "image",   src: "images/V(1200Pulses).png", title: "V component of Bloch Vector Over Experiment", desc: "" },
+  { type: "image",   src: "images/W(1200Pulses).png", title: "W component of Bloch Vector Over Experiment", desc: "" },
+  { type: "image",   src: "images/W_Zoomed.png", title: "Zoomed in W component of Bloch Vector Over Experiment", desc: "" },
+  { type: "image",   src: "images/V0vsParam(x).png", title: "ARP Force (Time Domain) Over Varying Initial Transverse Velocities", desc: "" },
+  { type: "youtube", src: "2tpGbZz86go", title: "ARP Force Plots (Time Domain) Over Coarse Variation of Laser Parameters", desc: "" },
+  { type: "youtube", src: "jotzZgo9GXw", title: "ARP Force Plots (Frequency Domain) Over Coarse Variation of Laser Parameters", desc: "" },
+  { type: "youtube", src: "J6jBduAalZY", title: "Bloch Sphere Dynamics with Stochastic Spontaneous Emission Model", desc: "" },
+  { type: "youtube", src: "mM_n-IWFYvQ", title: "Initial Pulse Dynamics on Bloch Sphere While Varying Peak Rabi Frequency", desc: "" },
+  { type: "youtube", src: "TlcXTyv-5rE", title: "Initial Pulse Dynamics on Bloch Sphere While Varying Detuning", desc: "" },
+  { type: "youtube", src: "JHrnD11rieY", title: "Initial Pulse Dynamics on Bloch Sphere While Varying Peak Rabi Frequency and Detuning", desc: "" },
+  { type: "pdf",     src: "docs/SE_TOLE-3.pdf", title: "Spontaneous Emission Distribution at Low Precision Solver Tolerances", desc: "" }
+  { type: "pdf",     src: "docs/SE_TOLE-12.pdf", title: "Spontaneous Emission Distribution at Low High Solver Tolerances", desc: "" }
+  { type: "pdf",     src: "docs/ForceMap_FrequencyDomain.pdf", title: "ARP Force (Frequency Domain) Over Varying Initial Transverse Velocities", desc: "" }
+];
+
+const labels = { all: "All", image: "Images", video: "Videos", pdf: "PDFs" };
+const groupOf = t => (t === "youtube" ? "video" : t === "link" ? "pdf" : t);
+const grid = document.getElementById("grid");
+const filters = document.getElementById("filters");
+const lightbox = document.getElementById("lightbox");
+let current = "all";
+
+function esc(s) { return String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+
+function media(it) {
+  const src = esc(it.src), title = esc(it.title);
+  switch (it.type) {
+    case "image":   return `<img src="${src}" alt="${title}" loading="lazy">`;
+    case "video":   return `<video src="${src}" controls preload="metadata"></video>`;
+    case "youtube": return `<iframe src="https://www.youtube.com/embed/${src}" title="${title}" loading="lazy" allowfullscreen></iframe>`;
+    case "pdf":     return `<span class="file-badge">PDF</span>`;
+    default:        return `<span class="file-badge">FILE</span>`;
+  }
+}
+
+function render() {
+  const shown = items.filter(it => current === "all" || groupOf(it.type) === current);
+  grid.innerHTML = shown.length ? shown.map(it => {
+    const link = it.type === "youtube" ? "" :
+      `<a href="${esc(it.src)}" ${it.type === "pdf" || it.type === "link" ? 'target="_blank" rel="noopener"' : "download"}>${it.type === "pdf" || it.type === "link" ? "Open" : "Download"}</a>`;
+    return `<article class="item"><div class="media">${media(it)}</div>
+      <div class="info"><h2>${esc(it.title)}</h2>${it.desc ? `<p>${esc(it.desc)}</p>` : ""}${link}</div></article>`;
+  }).join("") : `<p class="empty">Nothing here yet.</p>`;
+}
+
+function buildFilters() {
+  const present = new Set(items.map(i => groupOf(i.type)));
+  filters.innerHTML = Object.keys(labels).filter(k => k === "all" || present.has(k))
+    .map(k => `<button data-k="${k}" aria-pressed="${k === current}">${labels[k]}</button>`).join("");
+}
+
+filters.addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  current = b.dataset.k; buildFilters(); render();
+});
+grid.addEventListener("click", e => {
+  if (e.target.matches(".media img")) { lightbox.querySelector("img").src = e.target.src; lightbox.classList.add("open"); }
+});
+lightbox.addEventListener("click", () => lightbox.classList.remove("open"));
+document.addEventListener("keydown", e => { if (e.key === "Escape") lightbox.classList.remove("open"); });
+
+buildFilters(); render();
+</script>
+</body>
+</html>
