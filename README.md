@@ -4,4 +4,4 @@ final poster print. All data (images/pdf's/videos) were all built through my own
 numerical simulation of the Maxwell-Bloch Equations. 
 
 Please note that AI was only used to build this website, and not used to produce
-the listed results.
+the displayed results ( that was all me :D ).
